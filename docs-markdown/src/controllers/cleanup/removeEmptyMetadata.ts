@@ -58,8 +58,9 @@ export function removeEmptyMetadata(progress: any, promises: Array<Promise<any>>
 }
 
 export function deleteEmptyMetadata(data: any) {
-    const metadataRegex: any = new RegExp(/^(\w+\.*\w+?:)(\s*|\s""|\s'')[\n|\r](?=(.|\n|\r)*---\s$)/gmi);
-    data = data.replace(metadataRegex, '');
+    const metadataListRegex: any = new RegExp(/^(\s+\-)(\s*|\s""|\s'')[\n|\r](?=(.|\n|\r)*---\s$)/gmi);
+    data = data.replace(metadetaListRegex, '');
+    const metadataRegex: any = new RegExp(/^(\w+\.*\w+?:)(\s*|\s""|\s'')(?!\n*\s+\-\ (\s*|\s""|\s''))[\n|\r](?=(.|\n|\r)*---\s$)/gmi);
     return data;
 }
 
