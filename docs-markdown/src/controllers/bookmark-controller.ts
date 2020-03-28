@@ -5,7 +5,8 @@ import { files } from "node-dir";
 import { basename, dirname, extname, join, relative, resolve } from "path";
 import { QuickPickItem, window, workspace } from "vscode";
 import { addbookmarkIdentifier, bookmarkBuilder } from "../helper/bookmark-builder";
-import { insertContentToEditor, noActiveEditorMessage, sendTelemetryData } from "../helper/common";
+import { insertContentToEditor, noActiveEditorMessage } from "../helper/common";
+import { sendTelemetryData } from "../helper/telemetry";
 
 const telemetryCommand: string = "insertBookmark";
 let commandOption: string;
@@ -51,15 +52,15 @@ export function insertBookmarkExternal() {
     }
 
     // recursively get all the files from the root folder
-    files(folderPath, (err: any, files: any) => {
+    files(folderPath, (err: any, mdFiles: any) => {
         if (err) {
             window.showErrorMessage(err);
             throw err;
         }
 
         const items: QuickPickItem[] = [];
-        files.sort();
-        files.filter((file: any) => markdownExtensionFilter.indexOf(extname(file.toLowerCase())) !== -1).forEach((file: any) => {
+        mdFiles.sort();
+        mdFiles.filter((file: any) => markdownExtensionFilter.indexOf(extname(file.toLowerCase())) !== -1).forEach((file: any) => {
             items.push({ label: basename(file), description: dirname(file) });
         });
 

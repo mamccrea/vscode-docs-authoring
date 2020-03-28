@@ -4,7 +4,8 @@ import * as glob from "glob";
 import * as os from "os";
 import * as path from "path";
 import { QuickPickItem, window, workspace } from "vscode";
-import { hasValidWorkSpaceRootPath, isMarkdownFileCheck, noActiveEditorMessage, sendTelemetryData } from "../helper/common";
+import { hasValidWorkSpaceRootPath, isMarkdownFileCheck, noActiveEditorMessage } from "../helper/common";
+import { sendTelemetryData } from "../helper/telemetry";
 import { includeBuilder } from "../helper/utility";
 
 const telemetryCommand: string = "insertInclude";

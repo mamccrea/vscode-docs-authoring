@@ -1,10 +1,11 @@
 "use strict";
 
 import { QuickPickOptions, Range, Selection, TextEditorEdit, window } from "vscode";
-import { insertContentToEditor, isMarkdownFileCheck, isValidEditor, noActiveEditorMessage, postWarning, sendTelemetryData, showStatusMessage } from "../helper/common";
+import { insertContentToEditor, isMarkdownFileCheck, isValidEditor, noActiveEditorMessage, postWarning, showStatusMessage } from "../helper/common";
 import { insertUnselectedText } from "../helper/format-logic-manager";
 import { isInlineCode, isMultiLineCode } from "../helper/format-styles";
 import { getLanguageIdentifierQuickPickItems, languages } from "../helper/highlight-langs";
+import { sendTelemetryData } from "../helper/telemetry";
 
 const telemetryCommand: string = "formatCode";
 

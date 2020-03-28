@@ -5,9 +5,9 @@ import * as glob from "glob";
 import * as os from "os";
 import * as path from "path";
 import * as vscode from "vscode";
-import { output } from "../extension";
+
 import * as log from "./log";
-import { reporter } from "./telemetry";
+import { output } from "./output";
 
 export function tryFindFile(rootPath: string, fileName: string) {
     try {
@@ -349,29 +349,6 @@ export function showStatusMessage(message: string) {
     output.appendLine(`[${msTimeValue}] - ${message}`);
 }
 
-/**
- * Return repo name
- * @param Uri
- */
-export function getRepoName(workspacePath: vscode.Uri) {
-    // let repoName;
-    const repo = vscode.workspace.getWorkspaceFolder(workspacePath);
-    if (repo) {
-        const repoName = repo.name;
-        return repoName;
-    }
-}
-
-export function sendTelemetryData(telemetryCommand: string, commandOption: string) {
-    const editor = vscode.window.activeTextEditor;
-    if (editor) {
-        const workspaceUri = editor.document.uri;
-        const activeRepo = getRepoName(workspaceUri);
-        const telemetryProperties = activeRepo ? { command_option: commandOption, repo_name: activeRepo } : { command_option: commandOption, repo_name: "" };
-        reporter.sendTelemetryEvent(telemetryCommand, telemetryProperties);
-    }
-}
-
 export function detectFileExtension(filePath: string) {
     const fileExtension = path.extname(filePath);
     return fileExtension;
@@ -440,3 +417,11 @@ export function extractDocumentLink(
 export const naturalLanguageCompare = (a: string, b: string) => {
     return (!!a && !!b) ? a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }) : 0;
 };
+
+export function escapeRegExp(content: string) {
+    return content.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+}
+
+export function splice(insertAsPosition: number, content: string, insertStr: string) {
+    return content.slice(0, insertAsPosition) + insertStr + content.slice(insertAsPosition);
+}
