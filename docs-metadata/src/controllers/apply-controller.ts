@@ -4,7 +4,6 @@ import {commands,
 	OpenDialogOptions,
 	Uri} from 'vscode';
 
-	//test comment
 
 import { getExtensionPath } from '../extension';
 import { execPromise, metadataDirectory, openFolderInExplorerOrFinder } from '../util/common';
