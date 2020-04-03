@@ -41,7 +41,7 @@ suite("Remove Empty Metadata Controller", () => {
         await commands.executeCommand('workbench.action.closeAllEditors');
     });
     test("Remove Empty Metadata", async () => {
-        const filePath = resolve(__dirname, "../../../../../../src/test/data/repo/articles/test.md");
+        const filePath = resolve(__dirname, "../../../../../../src/test/data/repo/articles/docs-markdown.md");
         const docUri = Uri.file(filePath);
         const qpSelectionItems = [
             { "label": "Empty metadata" },
