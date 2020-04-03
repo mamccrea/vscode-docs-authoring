@@ -1,11 +1,17 @@
 import * as chai from "chai";
 import * as spies from "chai-spies";
-import { commands } from "vscode";
+import { resolve } from "path";
+import { commands, window, Uri } from "vscode";
 import { deleteEmptyMetadata, deleteNaMetadata, deleteCommentedMetadata } from "../../../../controllers/cleanup/removeEmptyMetadata";
+import * as removeEmptyMetadata from "../../../../controllers/cleanup/removeEmptyMetadata";
+import * as cleanup from "../../../../controllers/cleanup/cleanup-controller";
 import * as common from "../../../../helper/common";
+import { sleep } from "../../../test.common/common";
+import * as telemetry from "../../../../helper/telemetry";
 
 chai.use(spies);
 
+const sinon = require("sinon");
 const expect = chai.expect;
 const testString = `---
 title: "Remove empty metadata markdown testing document" 
@@ -26,7 +32,7 @@ ms.realValue: "Hello World"
 ---
 `
 
-suite("Remove Empty Metadata", () => {
+suite("Remove Empty Metadata Controller", () => {
     // Reset and tear down the spies
     teardown(() => {
         chai.spy.restore(common);
@@ -34,7 +40,25 @@ suite("Remove Empty Metadata", () => {
     suiteTeardown(async () => {
         await commands.executeCommand('workbench.action.closeAllEditors');
     });
+    test("Remove Empty Metadata", async () => {
+        const filePath = resolve(__dirname, "../../../../../../src/test/data/repo/articles/test.md");
+        const docUri = Uri.file(filePath);
+        const qpSelectionItems = [
+            { "label": "Empty metadata" },
+            { "label": "Remove all" }
+        ]
+        var counter = 0;
+        window.showQuickPick = (items: string[] | Thenable<string[]>) => {
+            return Promise.resolve(qpSelectionItems[counter++]) as Thenable<any>;
+        };
+        const stub = sinon.stub(telemetry, "sendTelemetryData");
+        const spy = chai.spy.on(removeEmptyMetadata, "removeEmptyMetadata");
+        cleanup.applyCleanupFile(docUri);
+        await sleep(10);
+        expect(spy).to.have.been.called();
+        stub.restore();
 
+    });
     test("Delete Empty Metadata", async () => {
         const cleanedString = deleteEmptyMetadata(testString);
         const expectedString = `---
@@ -52,7 +76,6 @@ ms.realValue: "Hello World"
 `
         expect(cleanedString).to.equal(expectedString);
     });
-
     test("Delete N/A Metadata", async () => {
         const cleanedString = deleteNaMetadata(testString);
         const expectedString = `---
@@ -73,7 +96,6 @@ ms.realValue: "Hello World"
 `
         expect(cleanedString).to.equal(expectedString);
     });
-
     test("Delete Commented Metadata", async () => {
         const cleanedString = deleteCommentedMetadata(testString);
         const expectedString = `---
