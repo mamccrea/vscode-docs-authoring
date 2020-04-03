@@ -30,6 +30,11 @@
   "contributes": {
     "commands": [
       {
+        "command": "insertMoniker",
+        "title": "Add moniker range",
+        "category": "Docs"
+      },
+      {
         "command": "markdownQuickPick",
         "title": "Docs: Markdown authoring menu"
       },
@@ -46,6 +51,16 @@
       {
         "command": "applyRedirectDaisyChainResolution",
         "title": "Resolve redirection file daisy-chains",
+        "category": "Docs"
+      },
+      {
+        "command": "detectInvalidDocumentIdRedirects",
+        "title": "Fix invalid redirect_document_ids",
+        "category": "Docs"
+      },
+      {
+        "command": "removeDefaultValuesInRedirects",
+        "title": "Remove default redirect_document_id values",
         "category": "Docs"
       },
       {
@@ -156,11 +171,6 @@
       {
         "command": "previewTopic",
         "title": "Preview",
-        "category": "Docs"
-      },
-      {
-        "command": "applyTemplate",
-        "title": "Template",
         "category": "Docs"
       },
       {
@@ -304,6 +314,14 @@
           "group": "Docs"
         },
         {
+          "command": "detectInvalidDocumentIdRedirects",
+          "group": "Docs"
+        },
+        {
+          "command": "removeDefaultValuesInRedirects",
+          "group": "Docs"
+        },
+        {
           "command": "formatBold",
           "group": "Docs",
           "when": "resourceLangId == markdown"
@@ -320,6 +338,11 @@
         },
         {
           "command": "insertAlert",
+          "group": "Docs",
+          "when": "resourceLangId == markdown"
+        },
+        {
+          "command": "insertMoniker",
           "group": "Docs",
           "when": "resourceLangId == markdown"
         },
@@ -684,6 +707,11 @@
     "test": "node ./out/src/test/runTest.js",
     "lint": "tslint -c tslint.json 'src/**/*.ts'"
   },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run compile && npm run lint"
+    }
+  },
   "dependencies": {
     "axios": "^0.19.2",
     "diff": "^4.0.2",
@@ -714,6 +742,7 @@
     "@types/yamljs": "^0.2.30",
     "chai": "^4.2.0",
     "chai-spies": "^1.0.0",
+    "husky": "^4.2.3",
     "mocha": "^7.1.1",
     "mocha-junit-reporter": "^1.23.3",
     "mock-require": "^3.0.3",
