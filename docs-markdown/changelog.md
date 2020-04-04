@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.2.64 (April 6th, 2020)
+
+- Fixed missed empty string value during empty metadata value cleanup.
+
 ## 0.2.63 (April 2nd, 2020)
 
 - Bundling with webpack
