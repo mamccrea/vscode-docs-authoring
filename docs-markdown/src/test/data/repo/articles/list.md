@@ -12,8 +12,18 @@ ms.custom: internal-contributor-guide
 
 # This is a list page
 
-- 
+Numbered list item
+Numbered list item
+Numbered list item
+
+Bulleted list item
+Bulleted list item
+Bulleted list item
+
+List item
+    Nested list item
+List item
+    Nested list item
 
 
-1. 
-
+hi
