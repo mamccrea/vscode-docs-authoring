@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import * as spies from "chai-spies";
 import { resolve } from "path";
-import { commands, TextEditor, window } from "vscode";
+import { commands, window } from "vscode";
 import { automaticList, insertBulletedList, insertListsCommands, insertNestedList, insertNumberedList, removeNestedList } from "../../../controllers/list-controller";
 import * as common from "../../../helper/common";
 import * as list from "../../../helper/list";
@@ -14,12 +14,6 @@ chai.use(spies);
 const sinon = require("sinon");
 
 const expect = chai.expect;
-
-function moveCursor(editor: TextEditor, y: number, x: number) {
-    const spy = chai.spy.on(common, "setCursorPosition");
-    spy(editor, y, x);
-    chai.spy.restore(spy);
-}
 
 suite("List Controller", () => {
     // Reset and tear down the spies
@@ -57,7 +51,7 @@ suite("List Controller", () => {
     });
     test("checkEmptyLine", async () => {
         const editor = window.activeTextEditor;
-        moveCursor(editor!, 28, 0);
+        common.setCursorPosition(editor!, 28, 0);
         await sleep(500);
         const stub = sinon.stub(telemetry, "sendTelemetryData");
         const spy = chai.spy.on(list, "checkEmptyLine");
@@ -68,7 +62,7 @@ suite("List Controller", () => {
     });
     test("checkEmptySelection", async () => {
         const editor = window.activeTextEditor;
-        moveCursor(editor!, 29, 3);
+        common.setCursorPosition(editor!, 29, 3);
         await sleep(500);
         const stub = sinon.stub(telemetry, "sendTelemetryData");
         const spy = chai.spy.on(list, "checkEmptySelection");
@@ -79,7 +73,7 @@ suite("List Controller", () => {
     });
     test("insertList", async () => {
         const editor = window.activeTextEditor;
-        moveCursor(editor!, 27, 0);
+        common.setCursorPosition(editor!, 27, 0);
         await sleep(500);
         window.showQuickPick = (items: string[] | Thenable<string[]>) => {
             return Promise.resolve("Numbered list") as Thenable<any>;
@@ -93,7 +87,7 @@ suite("List Controller", () => {
     });
     test("createNumberedListFromText", async () => {
         const editor = window.activeTextEditor;
-        moveCursor(editor!, 15, 0);
+        common.setSelectorPosition(editor!, 14, 0, 16, 19);
         await sleep(500);
         const stub = sinon.stub(telemetry, "sendTelemetryData");
         const spy = chai.spy.on(list, "createNumberedListFromText");
@@ -104,7 +98,7 @@ suite("List Controller", () => {
     });
     test("createBulletedListFromText", async () => {
         const editor = window.activeTextEditor;
-        moveCursor(editor!, 15, 0);
+        common.setSelectorPosition(editor!, 18, 0, 20, 19);
         window.showQuickPick = (items: string[] | Thenable<string[]>) => {
             return Promise.resolve("Bulleted list") as Thenable<any>;
         };
@@ -123,6 +117,8 @@ suite("List Controller", () => {
     });
     test("insertContentToEditor - nested list", async () => {
         const spy = chai.spy.on(common, "insertContentToEditor");
+        const editor = window.activeTextEditor;
+        common.setSelectorPosition(editor!, 22, 0, 25, 21);
         insertNestedList();
         await sleep(500);
         expect(spy).to.have.been.called();
